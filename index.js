@@ -20,7 +20,7 @@ const defaults = {
 const register = function(server, options) {
   const settings = Object.assign({}, defaults, options);
 
-  server.ext('onPreResponse', (request, h) => {
+  server.ext('onRequest', (request, h) => {
     const userAgent = request.headers['user-agent'].toLowerCase();
     const acceptsHtml = (request.headers.accept || '').includes('html');
     let matched = false;
@@ -38,11 +38,15 @@ const register = function(server, options) {
     }
 
     if (matched) {
-      const response = h.response('not found');
-      response.type('text/plain');
-      response.code(404);
-      response.takeover();
-      return response;
+      server.log(['hapi-bad-bots', 'blocked', 'info'], { message: 'blocked bot', path: request.path, userAgent, accept: acceptsHtml, matched });
+
+      const res = request.raw.res;
+
+      res.setHeader('Content-Type', 'text/plain');
+      res.statusCode = 404;
+      res.end('not found');
+
+      return h.abandon;
     }
 
     return h.continue;
