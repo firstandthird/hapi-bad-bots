@@ -53,7 +53,7 @@ const register = function(server, options) {
   });
 };
 
-export const plugin = {
+exports.plugin = {
   once: true,
   pkg: require('./package.json'),
   register
