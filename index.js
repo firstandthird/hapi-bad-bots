@@ -14,7 +14,8 @@ const defaults = {
   ],
   userAgentRules: [
     'mj12bot' // Generates excessive 404s
-  ]
+  ],
+  whitelist: []
 };
 
 const register = function(server, options) {
@@ -26,6 +27,11 @@ const register = function(server, options) {
     let matched = false;
 
     if (acceptsHtml) {
+      return h.continue;
+    }
+
+    if (settings.whitelist.includes(request.path)) {
+      server.log(['hapi-bad-bots', 'whitelist', 'info'], { message: 'whitelist', path: request.path });
       return h.continue;
     }
 
