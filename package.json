@@ -1,6 +1,6 @@
 {
   "name": "@firstandthird/hapi-bad-bots",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Fast error out for bad bots",
   "main": "index.js",
   "scripts": {
