@@ -15,7 +15,8 @@ const defaults = {
   userAgentRules: [
     'mj12bot' // Generates excessive 404s
   ],
-  whitelist: []
+  whitelist: [],
+  logOnly: false
 };
 
 const register = function(server, options) {
@@ -48,11 +49,13 @@ const register = function(server, options) {
 
       const res = request.raw.res;
 
-      res.setHeader('Content-Type', 'text/plain');
-      res.statusCode = 404;
-      res.end('not found');
+      if (!settings.logOnly) {
+        res.setHeader('Content-Type', 'text/plain');
+        res.statusCode = 404;
+        res.end('not found');
 
-      return h.abandon;
+        return h.abandon;
+      }
     }
 
     return h.continue;
