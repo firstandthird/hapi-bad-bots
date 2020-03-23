@@ -23,7 +23,13 @@ const register = function(server, options) {
   const settings = Object.assign({}, defaults, options);
 
   server.ext('onRequest', (request, h) => {
-    const userAgent = request.headers['user-agent'].toLowerCase();
+    if (!request.headers) {
+      request.headers = {
+        'user-agent': ''
+      };
+    }
+
+    const userAgent = request.headers['user-agent'] ? request.headers['user-agent'].toLowerCase() : '';
     const acceptsHtml = (request.headers.accept || '').includes('html');
     let matched = false;
 
